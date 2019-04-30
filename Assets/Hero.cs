@@ -6,6 +6,8 @@ public class Hero : MonoBehaviour
 {
     Rigidbody2D rb;
     Animator anim;
+    float isJump=0;
+    private System.Timers.Timer aTimer;
 
     // Start is called before the first frame update
     void Start()
@@ -13,7 +15,6 @@ public class Hero : MonoBehaviour
         rb = GetComponent<Rigidbody2D>();
         anim = GetComponent<Animator>();
     }
-//123
 
     void Update()
     {
@@ -21,14 +22,19 @@ public class Hero : MonoBehaviour
         {
             jump(); // Прыжок
         }
-        if (Input.GetAxis("Horizontal") == 0)
+        Flip(); // Поворот героя
+        if (Time.time - isJump < 0.5)
         {
-            anim.SetInteger("alive", 1);
-        }
-        else
-        {
-            Flip(); // Поворот героя
-            anim.SetInteger("alive", 2);
+            anim.SetInteger("alive", 3);
+        } else {
+            if (Input.GetAxis("Horizontal") == 0)
+            {
+                anim.SetInteger("alive", 1);
+            }
+            else
+            {
+                anim.SetInteger("alive", 2);
+            }
         }
     }
     void Flip()
@@ -49,7 +55,12 @@ public class Hero : MonoBehaviour
 
     void jump()
     {
-        rb.AddForce(transform.up * 10f, ForceMode2D.Impulse);
+        if(Time.time - isJump > 1)
+        {
+            isJump = Time.time;
+
+            rb.AddForce(transform.up * 12f, ForceMode2D.Impulse);
+        }
     }
 
 }
